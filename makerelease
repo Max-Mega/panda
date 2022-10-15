@@ -1,0 +1,92 @@
+#!/bin/bash
+
+read -p "Release version (e.g. 0.5.4)? " relver
+read -p "Put packages in? " reldir
+
+cd ..
+rm -rf panda-$relver && cp -R panda panda-$relver
+cd panda-$relver
+
+if [ "$reldir" == "" ]
+then
+  reldir=~/PKGS/panda
+fi
+
+# Clean everything up. This should be a fresh checkout.
+rmlist="*core* *~ #*# Makefile Makefile.in *.o *.lo *.obj config.cache config.log config.status logfile math config.h *.pdf .deps panda.ncb panda.opt autom4te.cache CVS panda.db"
+for i in $rmlist
+do
+  find -name $i | xargs rm -rf
+done
+rm -rf timetrials testdata
+
+mkdir -p $reldir
+
+# Windows
+echo "Creating Win32 package."
+(cd .. && zip -r -9 $reldir/panda-windows-$relver.zip panda-$relver)
+
+# Everyone else
+echo "Creating standard release."
+aclocal
+mkdir config
+libtoolize --force
+autoheader
+autoconf
+automake --add-missing --copy
+rm -rf activex Debug examples/Visual*
+(cd .. && tar cvjf $reldir/panda-$relver.tar.bz2 panda-$relver)
+
+# No examples
+echo "Creating no example release."
+rm -rf examples
+mv Makefile.am Makefile.am.ex && sed "s/SUBDIRS = . panda examples/SUBDIRS = . panda/" Makefile.am.ex > Makefile.am
+mv configure.in configure.in.ex && sed "s/AC_OUTPUT(examples\/Makefile /AC_OUTPUT(/" configure.in.ex > configure.in
+autoconf
+automake --add-missing --copy
+(cd .. && tar cvjf $reldir/panda-noexamples-$relver.tar.bz2 panda-$relver)
+
+# RPM
+./configure --prefix=/usr --enable-berkeley-db
+sudo cp $reldir/panda-$relver.tar.bz2 /usr/src/RPM/SOURCES/panda-$relver.tar.bz2
+sudo rpmbuild -ba panda.spec
+cp /usr/src/RPM/RPMS/i586/panda-$relver-1.i586.rpm /usr/src/RPM/RPMS/i586/panda-devel-$relver-1.i586.rpm $reldir
+cp /usr/src/RPM/SRPMS/panda-$relver-1.src.rpm $reldir/panda-$relver-1.src.rpm
+
+# Documentation
+for i in *.c
+do
+  autodocbook $i
+done
+cd man
+cat docbook/manual-start.sgml > manual.sgml
+for item in *.sgml
+do
+  if [ "$item" != "manual.sgml" ]
+  then
+    echo "<chapter><title>$item</title>" >> manual.sgml
+    grep -v DOCTYPE $item >> manual.sgml
+    echo "</chapter>" >> manual.sgml
+  fi
+done
+cat docbook/manual-end.sgml >> manual.sgml
+jw -o panda-docs-$relver -b html manual.sgml
+cd panda-docs-$relver
+for i in *.html
+do
+  tidy -m -c -i -asxhtml -q $i
+done
+cd ..
+tar -cvjf $reldir/panda-docs-$relver.tar.bz2 panda-docs-$relver
+cd ..
+
+# Signatures
+gpg -a --detach-sign $reldir/panda-windows-$relver.zip
+gpg -a --detach-sign $reldir/panda-$relver.tar.bz2
+gpg -a --detach-sign $reldir/panda-noexamples-$relver.tar.bz2
+gpg -a --detach-sign $reldir/panda-docs-$relver.tar.bz2
+gpg -a --detach-sign $reldir/panda-$relver-1.src.rpm
+gpg -a --detach-sign $reldir/panda-$relver-1.i586.rpm
+gpg -a --detach-sign $reldir/panda-devel-$relver-1.i586.rpm
+
+echo "Remember to email editor@planetpdf.com"

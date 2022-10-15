@@ -1,0 +1,67 @@
+Release 0.4 -> Release 0.5
+	
+2001-07-22 Michael Still mikal@stillhq.com
+	Chased memory leaks until blue in the face.
+
+2002-01-07 Michael Still mikal@stillhq.com
+	Fixed more memory leaks
+
+2002-01-07 Michael Still mikal@stillhq.com
+	Worked on generating the documentation as a single big PS or PDF file
+
+2002-01-08 Michael Still mikal@stillhq.com
+	Implemented the viewer preference functions in view.c... You can now hide the toolbar, the menubar, the view window user interface, and other cool things like that.
+
+2002-01-09 Michael Still mikal@stillhq.com
+	Implemented the rest of the page layout commands.
+
+2002-01-10 Michael Still mikal@stillhq.com
+	Implemented page durations. This doesn't work properly yet...
+
+2002-01-12 Michael Still mikal@stillhq.com
+	Implemented page transitions effects. There are now 17 page transition effects available if you wanted to build PDFs into presentations.
+
+2002-01-24 Michael Still mikal@stillhq.com
+	Finished implementing the new database style dictionary for objects... This is slightly slower than the in memory option, but can probably be sped up later on and is much nicer...
+
+2002-01-25 Michael Still mikal@stillhq.com
+	Removed the unused panda_objectarray structure...
+
+2002-01-25 Michael Still mikal@stillhq.com
+	Implemented the image reuse detection code. This means that if you have an image named foo.tif, and use it more than once in the document, it is only stored once in the PDF file that is generated. This is faster and makes smaller PDF documents. You can still force panda to give you two copies of the image in the PDF by using the panda_imageboxrotactual() call -- this might be of use when you know that foo.tif at 10am doesn't equal foo.tif at 10:01am...
+
+2002-01-26 Michael Still mikal@stillhq.com
+	Fixed the viewer preference stuff, which had been broken since the way in which dictionaries worked changed...
+
+2002-02-16 Michael Still mikal@stillhq.com
+	Documentation fixes
+
+2002-02-17 Michael Still mikal@stillhq.com
+	Got templates working
+	
+2002-03-10 Michael Still mikal@stillhq.com
+	Rolled in the new windows patches
+
+2002-05-01 Michael Still mikal@stillhq.com
+	Fixed tdb.h install bug
+
+2002-07-09 Michael Still mikal@stillhq.com
+	Fixed textboxes bug
+
+2003-04-25 Michael Still mikal@stillhq.com
+	Fixed a bug in panda_streamprintf which meant that complex graphical streams caused a segmentation fault.
+
+2003-05-28 Evan Nemerson evan@coeus-group.com
+	Fix a bug causing an endless loop in textboxes.
+
+2003-05-28 Michael Still mikal@stillhq.com
+	Changed the default leading to something which should at least work a little for multiline textboxes. If you have problems with overlapping text, call panda_setleading() to fix them...
+
+2003-05-28 Michael Still mikal@stillhq.com
+	Fixed failure to check if libtiff, libjpeg and libpng were found at configure time in images.c
+
+2003-05-28 Evan Nemerson evan@coeus-group.com
+	Fix a segmentation fault in the panda_imagesize() function.
+
+2003-05-28 Michael Still mikal@stillhq.com
+	Build tweak so that the examples with compile on a machine which has never had Panda before...

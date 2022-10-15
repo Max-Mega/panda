@@ -1,0 +1,94 @@
+Welcome to the seemingly never ending Panda TODO list. The format for this file
+is a simple list of tasks that need to be completed. There are also the
+following symbols defined to the left of the *'s, which have the following
+meanings:
+
+  K - release killer. The current development release of Panda will not be
+	released for production use until this problem is resolved
+  N - something that is expected to be fixed by the next major release of
+	Panda (after the one which we are working on now)
+  L - low priority, will one day be done.
+
+A lack of a symbol to the left merely means that I have not decided what it's
+priority is yet, and that it will oneday get done.
+
+-------------------------------------------------------------------------------
+
+N * Further improve font handling so that font changes are minimised (change
+	the order text boxes are drawn in so that the font need only be defined
+	once per page).
+
+  * Callback for error handling implementation.
+
+  * Be a bit more sensible in some of our error handling, for instance, if we
+  	can't find a file to include in the PDF we shouldn't exit -- we should
+	report it to the calling function and let them deal with it...
+
+N * Linearisation (also known as optimised PDF)
+
+  * Validity checks for things like names
+
+N * TIFF support does not currently include the following compression options:
+	- Flate
+	- LZW (never!)
+	- Packbit
+
+L * New font ids are handed out too often -- what about font reuse?
+
+  * At the moment if we can't change font we stop the whole schmozzle - should
+	we just report an error and keep going in the old font?
+
+  * AM_CONFIG_HEADER problems
+
+  * String length measuring with Freetype so that textboxes wrap nicely...
+
+  * More freeing of memory than we do now
+
+  * If you set the character spacing or something like that to a very
+	negative number, then we should complain in some way...
+
+  * Save the state that someone is built for lines and curves and stuff, and
+	allow them to restore that state later on if they would like to...
+
+  * Memory leaks
+
+  * PNG images have their alpha channel ignored, with the background colour not
+	being used. PDF does "poor man's alpha channelling", which we should 
+	try to support...
+
+  * Forced cascading properties
+
+  * Document wide properties (convenience)
+
+  * Error callback (including on Windows) - Juan Herrero <juan_herrero@yahoo.com>
+
+  * I think I have the conversion matrix wrong for the line drawing stuff...
+
+  * AUTOTOOLS FOR MAN PAGES
+
+  * Testing of the user interface toggles -- e.g. panda_hidemenubar
+
+  * Page duration doesn't seem to work
+
+  * Full annotation implementation
+
+  * Line annotations don't appear to work
+
+  * Allow callers to specify the date that annotations are created on if they
+	want.
+
+  * Optomise database accesses
+
+  * Possible caching implementation for the tdb stuff
+
+  * Man pages!
+
+  * Panic handler (based on Tridge's talk)
+
+  * Documentation
+
+  * Local version of tdb
+
+  * Remove tdb when we are finished with it...
+
+  * Do the vnsprintf semantic match all the target operating systems?
